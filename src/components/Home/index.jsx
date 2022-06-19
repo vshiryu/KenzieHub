@@ -7,6 +7,8 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 Modal.setAppElement("#root");
 
@@ -86,10 +88,31 @@ function Home({ userInfo, setUserInfo, setLoggedIn, loggedIn }) {
         },
       })
       .then((res) => {
-        console.log(res.data);
+        toast.success("Técnologia cadastrada com sucesso", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          onClose: () => {
+            closeModal();
+          },
+        });
         setTechs([...techs, res.data]);
       })
-      .catch((err) => console.log(err.response.data.message));
+      .catch((err) =>
+        toast.error(err.response.data.message, {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        })
+      );
   }
 
   return (
@@ -156,6 +179,7 @@ function Home({ userInfo, setUserInfo, setLoggedIn, loggedIn }) {
           </button>
         </form>
       </Modal>
+      <ToastContainer theme="dark" />
     </main>
   );
 }

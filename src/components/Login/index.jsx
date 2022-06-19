@@ -44,10 +44,8 @@ function Login({ setUserInfo, setLoggedIn }) {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
         setUserInfo(res.data.user);
-        console.log(res.data);
       })
       .catch((err) => {
-        console.log(err);
         toast.error(err.response.data.message, {
           position: "top-center",
           autoClose: 1500,
