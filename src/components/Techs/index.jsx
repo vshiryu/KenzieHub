@@ -1,47 +1,8 @@
 import axios from "axios";
-import Modal from "react-modal";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
+import "./style.css";
+import { BsTrash } from "react-icons/bs";
 
 function Techs({ techs, setTechs }) {
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-
-  function openModal() {
-    setModalIsOpen(true);
-  }
-
-  function closeModal() {
-    setModalIsOpen(false);
-  }
-
-  const customStyles = {
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      width: "90%",
-      maxWidth: "400px",
-      height: "400px",
-    },
-  };
-
-  const formSchema = yup.object().shape({
-    status: yup.string().required("Selecione uma técnologia"),
-  });
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(formSchema),
-  });
-
   function deleteTech(id) {
     axios
       .delete(`https://kenziehub.herokuapp.com/users/techs/${id}`, {
@@ -56,19 +17,18 @@ function Techs({ techs, setTechs }) {
   }
 
   return (
-    <ul>
+    <ul className="tech-list">
       {techs?.map((elem) => (
-        <li key={elem.id}>
+        <li key={elem.id} className="techs">
           <div>{elem.title}</div>
-          <div>
-            <span>{elem.status}</span>
-            <button
+          <div className="tech-info">
+            <span className="tech-status">{elem.status}</span>
+            <BsTrash
+              className="trash-btn"
               onClick={() => {
                 deleteTech(elem.id);
               }}
-            >
-              Remover
-            </button>
+            />
           </div>
         </li>
       ))}

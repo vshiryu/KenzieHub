@@ -37,7 +37,14 @@ function Home({ userInfo, setUserInfo, setLoggedIn, loggedIn }) {
       transform: "translate(-50%, -50%)",
       width: "90%",
       maxWidth: "400px",
-      height: "400px",
+      height: "350px",
+      backgroundColor: "rgba(33, 37, 41, 1)",
+      borderRadius: "5px",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      padding: "0",
+      color: "white",
     },
   };
 
@@ -50,12 +57,10 @@ function Home({ userInfo, setUserInfo, setLoggedIn, loggedIn }) {
   }
 
   useEffect(() => {
-    console.log("verificou login na home");
     !loggedIn && history.push("/");
   }, []);
 
   useEffect(() => {
-    console.log("atualizou techs no localStorage");
     localStorage.techs = JSON.stringify(techs);
   }, [techs]);
 
@@ -88,26 +93,33 @@ function Home({ userInfo, setUserInfo, setLoggedIn, loggedIn }) {
   }
 
   return (
-    <>
-      <header>
-        <h1>Kenzie Hub</h1>
-        <button
-          onClick={() => {
-            handleQuit();
-          }}
-        >
-          Sair
-        </button>
+    <main className="home-container">
+      <header className="home-header">
+        <div className="header-content">
+          <h1>Kenzie Hub</h1>
+          <button
+            className="quit-btn"
+            onClick={() => {
+              handleQuit();
+            }}
+          >
+            Sair
+          </button>
+        </div>
       </header>
-      <main>
-        <section>
-          <h2>Olá, {userInfo?.name}</h2>
-          <span>{userInfo?.course_module}</span>
+      <main className="content-container">
+        <section className="user-section">
+          <div className="user-info">
+            <h2>Olá, {userInfo?.name}</h2>
+            <span className="user-module">{userInfo?.course_module}</span>
+          </div>
         </section>
-        <section>
-          <div>
+        <section className="techs-section">
+          <div className="techs-header">
             <h3>Tecnologias</h3>
-            <button onClick={openModal}>+</button>
+            <button onClick={openModal} className="add-btn">
+              +
+            </button>
           </div>
           <Techs techs={techs} setTechs={setTechs} />
         </section>
@@ -117,28 +129,34 @@ function Home({ userInfo, setUserInfo, setLoggedIn, loggedIn }) {
         onRequestClose={closeModal}
         style={customStyles}
       >
-        <div>
+        <header className="modal-header">
           <h4>Cadastrar Tecnologia</h4>
-          <button onClick={closeModal}>Fechar</button>
-        </div>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div>
+          <button onClick={closeModal} className="close-modal-btn">
+            Fechar
+          </button>
+        </header>
+        <form onSubmit={handleSubmit(onSubmit)} className="modal-form">
+          <div className="name-box">
             <label>Nome</label>
-            <input {...register("title")} />
+            <input {...register("title")} className="input-modal" />
+            <span className="error">{errors.title?.message}</span>
           </div>
-          <div>
+          <div className="status-box">
             <label>Selecionar status</label>
-            <select {...register("status")}>
+            <select {...register("status")} className="input-modal">
               <option></option>
               <option>Iniciante</option>
               <option>Intermediário</option>
               <option>Avançado</option>
             </select>
+            <span className="error">{errors.status?.message}</span>
           </div>
-          <button type="submit">Cadastrar Tecnologia</button>
+          <button type="submit" className="register-tech-btn">
+            Cadastrar Tecnologia
+          </button>
         </form>
       </Modal>
-    </>
+    </main>
   );
 }
 

@@ -6,6 +6,8 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 function Login({ setUserInfo, setLoggedIn }) {
   let history = useHistory();
@@ -29,13 +31,33 @@ function Login({ setUserInfo, setLoggedIn }) {
     axios
       .post("https://kenziehub.herokuapp.com/sessions", formData)
       .then((res) => {
-        setLoggedIn(true);
+        toast.success("Login realizado com sucesso", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          onClose: () => setLoggedIn(true),
+        });
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
         setUserInfo(res.data.user);
         console.log(res.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        toast.error(err.response.data.message, {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      });
   }
 
   function togglePassword() {
@@ -43,38 +65,49 @@ function Login({ setUserInfo, setLoggedIn }) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <h2>Login</h2>
-      <div className="email-box">
-        <label htmlFor="email">Email</label>
-        <input name="email" {...register("email")} />
-        <span className="error">{errors.email?.message}</span>
-      </div>
-      <div className="password-box">
-        <label htmlFor="password">Senha</label>
-        <input
-          name="password"
-          {...register("password")}
-          type={passwordShown ? "text" : "password"}
-        />
-        {!passwordShown ? (
-          <AiFillEye onClick={togglePassword} />
-        ) : (
-          <AiFillEyeInvisible onClick={togglePassword} />
-        )}
-        <span className="error">{errors.password?.message}</span>
-      </div>
-      <button type="submit">Entrar</button>
-      <span>Ainda não possui uma conta?</span>
-      <button
-        type="button"
-        onClick={() => {
-          history.push("/register");
-        }}
-      >
-        Cadastre-se
-      </button>
-    </form>
+    <main className="login-container">
+      <h1 className="title">Kenzie Hub</h1>
+      <form onSubmit={handleSubmit(onSubmit)} className="login-form">
+        <h2 className="login-title">Login</h2>
+        <div className="email-box">
+          <label htmlFor="email">Email</label>
+          <input name="email" {...register("email")} className="login-input" />
+          <span className="error">{errors.email?.message}</span>
+        </div>
+        <div className="password-box">
+          <label htmlFor="password">Senha</label>
+          <input
+            className="login-input"
+            name="password"
+            {...register("password")}
+            type={passwordShown ? "text" : "password"}
+          />
+          <span className="error">{errors.password?.message}</span>
+          {!passwordShown ? (
+            <AiFillEye onClick={togglePassword} className="pass-visible" />
+          ) : (
+            <AiFillEyeInvisible
+              onClick={togglePassword}
+              className="pass-visible"
+            />
+          )}
+        </div>
+        <button type="submit" className="login-btn">
+          Entrar
+        </button>
+        <span className="btn-span">Ainda não possui uma conta?</span>
+        <button
+          className="redirect-register-btn"
+          type="button"
+          onClick={() => {
+            history.push("/register");
+          }}
+        >
+          Cadastre-se
+        </button>
+      </form>
+      <ToastContainer theme="dark" />
+    </main>
   );
 }
 

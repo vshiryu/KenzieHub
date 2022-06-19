@@ -12,7 +12,6 @@ function App() {
   );
 
   useEffect(() => {
-    console.log("verificou login na página de login");
     localStorage.token && setLoggedIn(true);
   }, []);
 

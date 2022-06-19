@@ -4,11 +4,14 @@ import "./style.css";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.min.css";
 
 function Register() {
   let history = useHistory();
 
   const formSchema = yup.object().shape({
+    name: yup.string().required("Insira seu nome"),
     email: yup
       .string()
       .required("Insira seu email")
@@ -39,51 +42,100 @@ function Register() {
     axios
       .post("https://kenziehub.herokuapp.com/users", formData)
       .then((res) => {
-        history.push("/");
+        toast.success("Cadastro realizado com sucesso", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          onClose: () => history.push("/"),
+        });
       })
-      .catch((err) => console.log(err.response.data.message));
+      .catch((err) => {
+        toast.error(err.response.data.message, {
+          position: "top-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      });
   }
 
   return (
-    <>
-      <header>
+    <main className="register-container">
+      <header className="register-header">
         <h1>Kenzie Hub</h1>
-        <button onClick={() => history.push("/")}>Voltar</button>
+        <button onClick={() => history.push("/")} className="back-btn">
+          Voltar
+        </button>
       </header>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <h2>Crie sua conta</h2>
+      <form onSubmit={handleSubmit(onSubmit)} className="register-form">
+        <h2 className="register-title">Crie sua conta</h2>
+        <span className="register-span">Rápido e grátis, vamos nessa</span>
         <div className="name-box">
           <label>Nome</label>
-          <input {...register("name")} />
+          <input
+            {...register("name")}
+            className="register-input"
+            placeholder="Digite aqui seu nome"
+          />
           <span className="error">{errors.name?.message}</span>
         </div>
         <div className="email-box">
           <label>Email</label>
-          <input {...register("email")} />
+          <input
+            {...register("email")}
+            className="register-input"
+            placeholder="Digite aqui seu email"
+          />
           <span className="error">{errors.email?.message}</span>
         </div>
         <div className="password-box">
           <label>Senha</label>
-          <input {...register("password")} type="password" />
+          <input
+            {...register("password")}
+            type="password"
+            className="register-input"
+            placeholder="Digite aqui sua senha"
+          />
           <span className="error">{errors.password?.message}</span>
         </div>
         <div className="confirm-box">
           <label>Confirmar Senha</label>
-          <input {...register("confirmPass")} type="password" />
+          <input
+            {...register("confirmPass")}
+            type="password"
+            className="register-input"
+            placeholder="Confirme aqui sua senha"
+          />
           <span className="error">{errors.confirmPass?.message}</span>
         </div>
         <div className="bio-box">
           <label>Bio</label>
-          <input {...register("bio")} />
+          <input
+            {...register("bio")}
+            className="register-input"
+            placeholder="Fale sobre você"
+          />
           <span className="error">{errors.bio?.message}</span>
         </div>
         <div className="contact-box">
           <label>Contato</label>
-          <input {...register("contact")} />
+          <input
+            {...register("contact")}
+            className="register-input"
+            placeholder="Opção de contato"
+          />
           <span className="error">{errors.contact?.message}</span>
         </div>
         <div className="module-box">
-          <select {...register("course_module")}>
+          <label>Selecionar módulo</label>
+          <select {...register("course_module")} className="register-input">
             <option></option>
             <option>Primeiro Módulo</option>
             <option>Segundo Módulo</option>
@@ -94,9 +146,16 @@ function Register() {
           </select>
           <span className="error">{errors.course_module?.message}</span>
         </div>
-        <button type="submit">Cadastrar</button>
+        <button
+          type="submit"
+          className="register-btn"
+          disabled={Object.keys(errors).length}
+        >
+          Cadastrar
+        </button>
       </form>
-    </>
+      <ToastContainer theme="dark" />
+    </main>
   );
 }
 
