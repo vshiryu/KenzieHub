@@ -30,7 +30,6 @@ function App() {
       <Route exact path="/home">
         <Home
           userInfo={userInfo}
-          setUserInfo={setUserInfo}
           loggedIn={loggedIn}
           setLoggedIn={setLoggedIn}
         />

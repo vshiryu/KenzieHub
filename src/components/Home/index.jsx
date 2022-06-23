@@ -12,11 +12,13 @@ import "react-toastify/dist/ReactToastify.min.css";
 
 Modal.setAppElement("#root");
 
-function Home({ userInfo, setUserInfo, setLoggedIn, loggedIn }) {
+function Home({ userInfo, setLoggedIn, loggedIn }) {
   let history = useHistory();
 
   const [techs, setTechs] = useState(
-    !localStorage.techs ? userInfo?.techs : JSON.parse(localStorage.techs)
+    !localStorage.techs || localStorage.techs === "undefined"
+      ? userInfo?.techs
+      : JSON.parse(localStorage.techs)
   );
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -67,8 +69,8 @@ function Home({ userInfo, setUserInfo, setLoggedIn, loggedIn }) {
   }, [techs]);
 
   const formSchema = yup.object().shape({
-    title: yup.string().required("Insira uma técnologia"),
-    status: yup.string().required("Selecione uma técnologia"),
+    title: yup.string().required("Insira uma tecnologia"),
+    status: yup.string().required("Selecione um status"),
   });
 
   const {
@@ -88,7 +90,7 @@ function Home({ userInfo, setUserInfo, setLoggedIn, loggedIn }) {
         },
       })
       .then((res) => {
-        toast.success("Técnologia cadastrada com sucesso", {
+        toast.success("Tecnologia cadastrada com sucesso", {
           position: "top-center",
           autoClose: 1000,
           hideProgressBar: false,
